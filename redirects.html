@@ -1,0 +1,47 @@
+<!doctype html><html lang="ru">
+<head>
+<meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Генератор редиректов • SEO Tools</title>
+<link rel="stylesheet" href="/assets/style.css"/>
+</head>
+<body>
+<header class="container"><div class="nav">
+  <img src="/assets/logo.svg" alt="logo">
+  <a href="/"><b>Главная</b></a><a href="/utm.html">UTM</a><a href="/slug.html">Slug</a>
+  <a href="/title-meta.html">Title/Description</a><a href="/faq-schema.html">FAQ Schema</a>
+  <a href="/robots-sitemap.html">Robots/Sitemap</a><a href="/og-preview.html">OG Preview</a>
+  <a href="/redirects.html">Редиректы</a><a href="/support.html">Поддержать</a>
+</div></header>
+<main class="container">
+  <h1>Генератор редиректов</h1>
+  <div class="card">
+    <p class="muted">Формат входных строк: <span class="kbd">/old-url,/new-url</span> (по одной паре в строке). Поддерживаются запятая или таб.</p>
+    <textarea id="src" class="input" placeholder="/old-a,/new-a&#10;/old-b,/new-b"></textarea>
+    <p><button class="btn" id="go">Сгенерировать</button></p>
+    <h2>.htaccess</h2>
+    <pre id="ht"></pre>
+    <h2>nginx</h2>
+    <pre id="ng"></pre>
+  </div>
+</main>
+<script>
+function parseLines(txt){
+  return txt.split(/\r?\n/).map(l=>l.trim()).filter(Boolean).map(l=>{
+    const p = l.split(/,|\t/).map(s=>s.trim());
+    return {from:p[0], to:p[1]};
+  }).filter(x=>x.from && x.to);
+}
+function htaccess(pairs){
+  return pairs.map(({from,to})=>`Redirect 301 ${from} ${to}`).join('\n');
+}
+function nginx(pairs){
+  const lines = pairs.map(({from,to})=>`rewrite ^${from.replace(/^\//,'/')}?$ ${to} permanent;`).join('\n');
+  return `location / {\n${lines ? '  '+lines.replace(/\n/g,'\n  ')+'\n' : ''}}`;
+}
+document.getElementById('go').onclick=()=>{
+  const pairs = parseLines(document.getElementById('src').value);
+  document.getElementById('ht').textContent = htaccess(pairs);
+  document.getElementById('ng').textContent = nginx(pairs);
+};
+</script>
+</body></html>

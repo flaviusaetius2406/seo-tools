@@ -1,0 +1,63 @@
+<!doctype html><html lang="ru">
+<head>
+<meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>FAQ Schema JSON-LD • SEO Tools</title>
+<link rel="stylesheet" href="/assets/style.css"/>
+</head>
+<body>
+<header class="container"><div class="nav">
+  <img src="/assets/logo.svg" alt="logo">
+  <a href="/"><b>Главная</b></a><a href="/utm.html">UTM</a><a href="/slug.html">Slug</a>
+  <a href="/title-meta.html">Title/Description</a><a href="/faq-schema.html">FAQ Schema</a>
+  <a href="/robots-sitemap.html">Robots/Sitemap</a><a href="/og-preview.html">OG Preview</a>
+  <a href="/redirects.html">Редиректы</a><a href="/support.html">Поддержать</a>
+</div></header>
+<main class="container">
+  <h1>FAQ Schema JSON-LD</h1>
+  <div class="card">
+    <div id="rows"></div>
+    <p><button class="btn" id="add">Добавить вопрос</button></p>
+    <h2>JSON-LD</h2>
+    <pre id="out"></pre>
+    <p><button class="btn" id="copy">Скопировать</button> <span id="msg" class="muted"></span></p>
+  </div>
+</main>
+<script>
+const rows = document.getElementById('rows');
+const out = document.getElementById('out');
+function addRow(qVal='',aVal=''){
+  const wrap=document.createElement('div');
+  wrap.className='card';
+  wrap.innerHTML=\`
+    <label>Вопрос<input class="input q" placeholder="Вопрос" value="\${qVal}"/></label>
+    <label>Ответ<textarea class="input a" placeholder="Краткий ответ">\${aVal}</textarea></label>
+    <p><button class="btn rm">Удалить</button></p>\`;
+  rows.appendChild(wrap);
+  wrap.querySelector('.rm').onclick=()=>{wrap.remove(); render();};
+  wrap.querySelector('.q').oninput=render;
+  wrap.querySelector('.a').oninput=render;
+}
+function render(){
+  const items=[...rows.querySelectorAll('.card')].map(div=>{
+    const q=div.querySelector('.q').value.trim();
+    const a=div.querySelector('.a').value.trim();
+    if(!q||!a) return null;
+    return { "@type":"Question", "name":q, "acceptedAnswer":{"@type":"Answer","text":a} };
+  }).filter(Boolean);
+  const data = {
+    "@context":"https://schema.org",
+    "@type":"FAQPage",
+    "mainEntity": items
+  };
+  out.textContent = JSON.stringify(data,null,2);
+}
+document.getElementById('add').onclick=()=>addRow();
+document.getElementById('copy').onclick=async()=>{
+  await navigator.clipboard.writeText(out.textContent);
+  document.getElementById('msg').textContent='Скопировано';
+  setTimeout(()=>document.getElementById('msg').textContent='',1500);
+};
+addRow('Как работает инструмент?','Вы добавляете вопросы и ответы, мы создаем JSON-LD.');
+render();
+</script>
+</body></html>

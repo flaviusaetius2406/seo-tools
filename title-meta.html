@@ -1,0 +1,50 @@
+<!doctype html><html lang="ru">
+<head>
+<meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Ширина Title/Description в пикселях • SEO Tools</title>
+<link rel="stylesheet" href="/assets/style.css"/>
+</head>
+<body>
+<header class="container"><div class="nav">
+  <img src="/assets/logo.svg" alt="logo">
+  <a href="/"><b>Главная</b></a><a href="/utm.html">UTM</a><a href="/slug.html">Slug</a>
+  <a href="/title-meta.html">Title/Description</a><a href="/faq-schema.html">FAQ Schema</a>
+  <a href="/robots-sitemap.html">Robots/Sitemap</a><a href="/og-preview.html">OG Preview</a>
+  <a href="/redirects.html">Редиректы</a><a href="/support.html">Поддержать</a>
+</div></header>
+<main class="container">
+  <h1>Ширина Title/Description</h1>
+  <div class="card">
+    <label>Title<input id="title" class="input" placeholder="До 580–600 px для сниппета"/></label>
+    <div class="row">
+      <div><span id="tChars" class="badge">0 симв.</span></div>
+      <div><span id="tPx" class="badge">0 px</span></div>
+    </div>
+  </div>
+  <div class="card">
+    <label>Description<textarea id="desc" class="input" placeholder="Обычно помещается до ~920 px"></textarea></label>
+    <div class="row">
+      <div><span id="dChars" class="badge">0 симв.</span></div>
+      <div><span id="dPx" class="badge">0 px</span></div>
+    </div>
+  </div>
+</main>
+<script>
+const c = document.createElement('canvas').getContext('2d');
+c.font = '16px Arial';
+const widthPx = (txt)=>Math.round(c.measureText(txt).width);
+function bind(inputId, charsId, pxId){
+  const i = document.getElementById(inputId),
+        chars = document.getElementById(charsId),
+        px = document.getElementById(pxId);
+  const upd=()=>{
+    const v=i.value||'';
+    chars.textContent = v.length+' симв.';
+    px.textContent = widthPx(v)+' px';
+  };
+  i.addEventListener('input',upd); upd();
+}
+bind('title','tChars','tPx');
+bind('desc','dChars','dPx');
+</script>
+</body></html>

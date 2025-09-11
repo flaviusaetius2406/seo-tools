@@ -1,0 +1,57 @@
+<!doctype html><html lang="ru">
+<head>
+<meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>OG-превью • SEO Tools</title>
+<link rel="stylesheet" href="/assets/style.css"/>
+</head>
+<body>
+<header class="container"><div class="nav">
+  <img src="/assets/logo.svg" alt="logo">
+  <a href="/"><b>Главная</b></a><a href="/utm.html">UTM</a><a href="/slug.html">Slug</a>
+  <a href="/title-meta.html">Title/Description</a><a href="/faq-schema.html">FAQ Schema</a>
+  <a href="/robots-sitemap.html">Robots/Sitemap</a><a href="/og-preview.html">OG Preview</a>
+  <a href="/redirects.html">Редиректы</a><a href="/support.html">Поддержать</a>
+</div></header>
+<main class="container">
+  <h1>OG-превью</h1>
+  <div class="card">
+    <label>URL<input id="u" class="input" placeholder="https://site.com/page"/></label>
+    <p><button class="btn" id="go">Получить превью</button></p>
+    <div id="out"></div>
+  </div>
+</main>
+<script>
+const q=s=>document.querySelector(s);
+function abs(base, maybe){
+  try{
+    const b=new URL(base);
+    return new URL(maybe,b).toString();
+  }catch{ return maybe; }
+}
+function parseMeta(html){
+  const dom = new DOMParser().parseFromString(html,'text/html');
+  const g=(sel)=>dom.querySelector(sel)?.getAttribute('content')||'';
+  return {
+    title: g('meta[property="og:title"]') || dom.querySelector('title')?.textContent || '',
+    desc: g('meta[property="og:description"]') || g('meta[name="description"]'),
+    image: g('meta[property="og:image"]')
+  };
+}
+q('#go').onclick=async()=>{
+  const url = q('#u').value.trim();
+  if(!url) return;
+  const r = await fetch('/api/fetch?url='+encodeURIComponent(url)).then(r=>r.json());
+  if(!r.text){ q('#out').innerHTML='<div class="alert">Не удалось получить HTML</div>'; return; }
+  const meta = parseMeta(r.text);
+  const img = meta.image ? abs(r.url, meta.image) : '';
+  q('#out').innerHTML = `
+    <div class="card">
+      <p><b>Title:</b> ${meta.title || '—'}</p>
+      <p><b>Description:</b> ${meta.desc || '—'}</p>
+      <p><b>Image:</b> ${img ? `<a href="${img}" target="_blank">${img}</a>` : '—'}</p>
+      ${img ? `<img src="${img}" alt="og image" style="max-width:100%;border-radius:10px;border:1px solid var(--border)"/>` : ''}
+    </div>
+  `;
+};
+</script>
+</body></html>

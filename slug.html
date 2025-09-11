@@ -1,0 +1,44 @@
+<!doctype html><html lang="ru">
+<head>
+<meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Slug-генератор • SEO Tools</title>
+<link rel="stylesheet" href="/assets/style.css"/>
+</head>
+<body>
+<header class="container"><div class="nav">
+  <img src="/assets/logo.svg" alt="logo">
+  <a href="/"><b>Главная</b></a><a href="/utm.html">UTM</a><a href="/slug.html">Slug</a>
+  <a href="/title-meta.html">Title/Description</a><a href="/faq-schema.html">FAQ Schema</a>
+  <a href="/robots-sitemap.html">Robots/Sitemap</a><a href="/og-preview.html">OG Preview</a>
+  <a href="/redirects.html">Редиректы</a><a href="/support.html">Поддержать</a>
+</div></header>
+<main class="container">
+  <h1>Slug-генератор</h1>
+  <div class="card">
+    <label>Текст<input id="txt" class="input" placeholder="Например: Новые кроссовки 2025, размер 42"/></label>
+    <p><button class="btn" id="go">Сделать slug</button></p>
+    <label>Результат<input id="out" class="input" readonly/></label>
+  </div>
+</main>
+<script>
+const map = {
+ 'а':'a','б':'b','в':'v','г':'g','д':'d','е':'e','є':'ie','ж':'zh','з':'z','и':'i','і':'i','й':'j',
+ 'к':'k','л':'l','м':'m','н':'n','о':'o','п':'p','р':'r','с':'s','т':'t','у':'u','ф':'f','х':'h',
+ 'ц':'c','ч':'ch','ш':'sh','щ':'sch','ь':'','ы':'y','ъ':'','э':'e','ю':'yu','я':'ya',
+ 'А':'a','Б':'b','В':'v','Г':'g','Д':'d','Е':'e','Є':'ie','Ж':'zh','З':'z','И':'i','І':'i','Й':'j',
+ 'К':'k','Л':'l','М':'m','Н':'n','О':'o','П':'p','Р':'r','С':'s','Т':'t','У':'u','Ф':'f','Х':'h',
+ 'Ц':'c','Ч':'ch','Ш':'sh','Щ':'sch','Ь':'','Ы':'y','Ъ':'','Э':'e','Ю':'yu','Я':'ya'
+};
+function slugify(s){
+  return s.split('').map(ch=>map[ch] ?? ch)
+    .join('')
+    .normalize('NFKD').replace(/[^\w\s-]/g,'')
+    .trim().replace(/\s+/g,'-').replace(/-+/g,'-')
+    .toLowerCase();
+}
+document.querySelector('#go').onclick=()=>{
+  const inTxt = document.querySelector('#txt').value;
+  document.querySelector('#out').value = slugify(inTxt);
+};
+</script>
+</body></html>

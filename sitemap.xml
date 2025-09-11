@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+ <url><loc>https://ВАШ_ДОМЕН/</loc></url>
+ <url><loc>https://ВАШ_ДОМЕН/utm.html</loc></url>
+ <url><loc>https://ВАШ_ДОМЕН/slug.html</loc></url>
+ <url><loc>https://ВАШ_ДОМЕН/title-meta.html</loc></url>
+ <url><loc>https://ВАШ_ДОМЕН/faq-schema.html</loc></url>
+ <url><loc>https://ВАШ_ДОМЕН/robots-sitemap.html</loc></url>
+ <url><loc>https://ВАШ_ДОМЕН/og-preview.html</loc></url>
+ <url><loc>https://ВАШ_ДОМЕН/redirects.html</loc></url>
+ <url><loc>https://ВАШ_ДОМЕН/support.html</loc></url>
+</urlset>

@@ -1,0 +1,63 @@
+<!doctype html><html lang="ru">
+<head>
+<meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>UTM-генератор • SEO Tools</title>
+<link rel="stylesheet" href="/assets/style.css"/>
+</head>
+<body>
+<header class="container">
+  <div class="nav">
+    <img src="/assets/logo.svg" alt="logo">
+    <a href="/"><b>Главная</b></a>
+    <a href="/utm.html">UTM</a>
+    <a href="/slug.html">Slug</a>
+    <a href="/title-meta.html">Title/Description</a>
+    <a href="/faq-schema.html">FAQ Schema</a>
+    <a href="/robots-sitemap.html">Robots/Sitemap</a>
+    <a href="/og-preview.html">OG Preview</a>
+    <a href="/redirects.html">Редиректы</a>
+    <a href="/support.html">Поддержать</a>
+  </div>
+</header>
+
+<main class="container">
+  <h1>UTM-генератор</h1>
+  <div class="card">
+    <div class="row">
+      <div><label>Базовый URL<input id="base" class="input" placeholder="https://site.com/page"/></label></div>
+      <div><label>utm_source<input id="src" class="input" placeholder="facebook"/></label></div>
+      <div><label>utm_medium<input id="med" class="input" placeholder="cpc"/></label></div>
+      <div><label>utm_campaign<input id="cmp" class="input" placeholder="spring_sale"/></label></div>
+      <div><label>utm_content<input id="cnt" class="input" placeholder="banner_a"/></label></div>
+      <div><label>utm_term<input id="trm" class="input" placeholder="купить+кроссовки"/></label></div>
+    </div>
+    <p><button class="btn" id="build">Собрать UTM</button></p>
+    <label>Результат<textarea id="out" class="input" readonly></textarea></label>
+    <p><button class="btn" id="copy">Скопировать</button> <span id="msg" class="muted"></span></p>
+  </div>
+</main>
+
+<script>
+const q = s=>document.querySelector(s);
+function buildUrl(){
+  const base = q('#base').value.trim();
+  if(!base){ return ''; }
+  const url = new URL(base);
+  const pairs = [
+    ['utm_source', q('#src').value],
+    ['utm_medium', q('#med').value],
+    ['utm_campaign', q('#cmp').value],
+    ['utm_content', q('#cnt').value],
+    ['utm_term', q('#trm').value],
+  ].filter(([k,v])=>v.trim());
+  pairs.forEach(([k,v])=>url.searchParams.set(k, v.trim()));
+  return url.toString();
+}
+q('#build').onclick = ()=>{ q('#out').value = buildUrl(); };
+q('#copy').onclick = async ()=>{
+  await navigator.clipboard.writeText(q('#out').value || '');
+  q('#msg').textContent = 'Скопировано';
+  setTimeout(()=>q('#msg').textContent='',1500);
+};
+</script>
+</body></html>

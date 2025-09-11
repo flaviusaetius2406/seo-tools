@@ -1,0 +1,46 @@
+<!doctype html><html lang="ru">
+<head>
+<meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Проверка robots.txt и sitemap.xml • SEO Tools</title>
+<link rel="stylesheet" href="/assets/style.css"/>
+</head>
+<body>
+<header class="container"><div class="nav">
+  <img src="/assets/logo.svg" alt="logo">
+  <a href="/"><b>Главная</b></a><a href="/utm.html">UTM</a><a href="/slug.html">Slug</a>
+  <a href="/title-meta.html">Title/Description</a><a href="/faq-schema.html">FAQ Schema</a>
+  <a href="/robots-sitemap.html">Robots/Sitemap</a><a href="/og-preview.html">OG Preview</a>
+  <a href="/redirects.html">Редиректы</a><a href="/support.html">Поддержать</a>
+</div></header>
+<main class="container">
+  <h1>Проверка robots.txt и sitemap.xml</h1>
+  <div class="card">
+    <label>Домен или URL<input id="u" class="input" placeholder="https://site.com"/></label>
+    <p><button class="btn" id="go">Проверить</button></p>
+    <div id="res"></div>
+    <p class="muted">Мы запрашиваем файлы через безопасный прокси и показываем статус/тип/размер.</p>
+  </div>
+</main>
+<script>
+const q=s=>document.querySelector(s);
+function join(base, path){
+  const b = new URL(base);
+  return new URL(path, b).toString();
+}
+async function check(url){
+  const r = await fetch('/api/fetch?url='+encodeURIComponent(url));
+  return r.json();
+}
+q('#go').onclick=async()=>{
+  const base=q('#u').value.trim();
+  if(!base) return;
+  const robots = join(base,'/robots.txt');
+  const sitemap = join(base,'/sitemap.xml');
+  const [r1,r2]=await Promise.all([check(robots),check(sitemap)]);
+  q('#res').innerHTML = `
+    <div class="alert"><b>robots.txt</b><br>Status: ${r1.status} • ${r1.contentType || '—'} • ${r1.contentLength||0} bytes<br><a href="${robots}" target="_blank">Открыть</a></div>
+    <div class="alert"><b>sitemap.xml</b><br>Status: ${r2.status} • ${r2.contentType || '—'} • ${r2.contentLength||0} bytes<br><a href="${sitemap}" target="_blank">Открыть</a></div>
+  `;
+};
+</script>
+</body></html>
